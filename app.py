@@ -296,6 +296,28 @@ DARK_THEME_CSS = """
         background: linear-gradient(135deg, #228ae6, #1c5fc0) !important;
         color: #ffffff !important;
     }
+    /* 次按钮：深蓝描边胶囊 —— 夜间不能保留默认白底，否则浅字几乎看不见 */
+    button[kind="secondary"], .stButton button[kind="secondary"] {
+        background: linear-gradient(135deg, #10274a, #0c1f3d) !important;
+        border: 1px solid #2f517e !important;
+        color: #dbe7f5 !important;
+    }
+    .stButton button[kind="secondary"] p,
+    .stButton button[kind="secondary"] span,
+    .stButton button[kind="secondary"] div { color: #dbe7f5 !important; }
+    button[kind="secondary"]:hover,
+    .stButton button[kind="secondary"]:hover {
+        background: #1b3a63 !important;
+        border-color: #4dabf7 !important;
+        color: #ffffff !important;
+    }
+    .stButton button[kind="secondary"]:hover p,
+    .stButton button[kind="secondary"]:hover span { color: #ffffff !important; }
+    button[kind="secondary"]:active {
+        background: #234a7d !important;
+        border-color: #74c0fc !important;
+        color: #ffffff !important;
+    }
     /* 数据表格容器（canvas 内部用反色滤镜深色化） */
     [data-testid="stDataFrame"], [data-testid="stDataFrameResizable"] {
         background-color: #0d2140;
@@ -416,28 +438,25 @@ TEXTS = {
         "preview_rows": "展示前 N 行",
         "preview_dim": "当前视图维度：",
         "preview_style": "为数值列添加色阶条件格式（颜色越蓝数值越大，pandas Styler）",
-        "download_preview": "下载当前视图为 CSV",
-        # ---- 筛选 ----
-        "filter_cols_show": "第 1 步：选择需要展示的列",
-        "filter_cols_cond": "第 2 步：选择需要添加筛选条件的列（可多选）",
-        "filter_result_title": "筛选结果",
-        "filter_result_dim": "符合条件的记录：",
+        # ---- 筛选 + 预览（本页只保留一次筛选，表格与图表共用其结果）----
+        "filter_section_title": "① 数据筛选（本页唯一筛选入口，下方表格与图表均随结果联动）",
+        "preview_section_title": "② 筛选结果预览",
+        "chart_section_title": "③ 筛选结果图表（全部基于当前筛选结果）",
+        "filter_cols_cond": "选择需要添加筛选条件的列（可多选；不选则使用全部数据）",
         "filter_empty": "没有符合筛选条件的记录，请放宽条件后重试。",
         "download_filter": "下载筛选结果为 CSV",
         "filter_num_tip": "数值范围（拖动滑块，闭区间）",
         "filter_cat_tip": "勾选要保留的类别（不选视为全部保留）",
-        "filter_viz_title": "筛选结果可视化（随筛选条件实时联动）",
         "filter_before": "筛选前记录数",
         "filter_after": "筛选后记录数",
         "filter_keep_pct": "保留比例",
-        "filter_obs": "分布观察字段（数值型）",
-        "filter_scatter_x": "联动散点图 X 字段",
-        "filter_scatter_y": "联动散点图 Y 字段",
-        "filter_hist_title": "整体分布（灰）与筛选命中（蓝）对比",
-        "filter_scatter_title": "命中样本散点图（灰=未命中，蓝=命中）",
-        "filter_no_cond_hint": "当前未设置任何筛选条件，蓝色覆盖全部样本；"
-                               "在上方选择筛选列并调整条件后，即可看到高亮联动效果。",
-        "filter_no_num": "当前数据集没有数值列，无法绘制联动分布图。",
+        "filter_obs": "分布直方图字段（数值型）",
+        "filter_scatter_x": "散点图 X 字段",
+        "filter_scatter_y": "散点图 Y 字段",
+        "filter_no_cond_hint": "当前未设置筛选条件，展示全部 {n} 条记录；"
+                               "添加条件后，下方预览与图表会自动收缩为命中子集。",
+        "filter_no_num": "当前数据集没有数值列，无法绘制分布图。",
+        "filter_chart_empty": "筛选结果为空，暂无可绘制的数据，请放宽筛选条件。",
         # ---- 统计描述 ----
         "desc_num_title": "数值型字段统计描述（df.describe()，色阶=同统计量下的字段对比）",
         "desc_cat_title": "类别型字段统计描述",
@@ -687,28 +706,25 @@ TEXTS = {
         "preview_dim": "Current view shape:",
         "preview_style": "Add color-scale formatting to numeric columns "
                          "(darker blue = larger value, pandas Styler)",
-        "download_preview": "Download current view as CSV",
-        # ---- filtering ----
-        "filter_cols_show": "Step 1: Select columns to display",
-        "filter_cols_cond": "Step 2: Select columns to filter on (multi-select)",
-        "filter_result_title": "Filtered results",
-        "filter_result_dim": "Matching records:",
+        # ---- filtering + preview (one filter set shared by table and charts) ----
+        "filter_section_title": "1. Filters (the only filter set on this page — the table and charts below all react to it)",
+        "preview_section_title": "2. Preview of the filtered data",
+        "chart_section_title": "3. Charts of the filtered data",
+        "filter_cols_cond": "Select columns to filter on (multi-select; empty = use all data)",
         "filter_empty": "No records match the filters. Try relaxing the conditions.",
         "download_filter": "Download filtered results as CSV",
         "filter_num_tip": "Numeric range (drag the sliders, closed interval)",
         "filter_cat_tip": "Keep selected categories (empty = keep all)",
-        "filter_viz_title": "Live visualization of the filtered subset",
         "filter_before": "Records before",
         "filter_after": "Records after",
         "filter_keep_pct": "Retained ratio",
-        "filter_obs": "Distribution field (numeric)",
-        "filter_scatter_x": "Linked scatter X field",
-        "filter_scatter_y": "Linked scatter Y field",
-        "filter_hist_title": "Full distribution (grey) vs matched subset (blue)",
-        "filter_scatter_title": "Matched samples (grey = excluded, blue = matched)",
-        "filter_no_cond_hint": "No filter is active yet, so blue covers all samples. "
-                               "Add a filter column above to see the linked highlighting.",
-        "filter_no_num": "No numeric column available for the linked distribution charts.",
+        "filter_obs": "Histogram field (numeric)",
+        "filter_scatter_x": "Scatter X field",
+        "filter_scatter_y": "Scatter Y field",
+        "filter_no_cond_hint": "No filter is active yet — showing all {n} records. "
+                               "Add conditions below and the preview and charts shrink to the matched subset.",
+        "filter_no_num": "No numeric column available for the distribution charts.",
+        "filter_chart_empty": "The filtered subset is empty — nothing to chart. Try relaxing the filters.",
         # ---- statistics ----
         "desc_num_title": "Numeric columns summary (df.describe(); compare columns within each statistic)",
         "desc_cat_title": "Categorical columns summary",
@@ -1629,86 +1645,37 @@ def page_overview():
     st.dataframe(df.head(), width="stretch")
 
 # =====================================================================
-# 6. 页面二：数据表格预览
-#    自由选择展示列 + 控制展示行数 + 色阶条件格式 + 结果下载
+# 6. 页面二：数据预览与筛选
+#    全页只有一次筛选：数值列区间滑块 / 类别列多选，多条件“逻辑与”；
+#    筛选结果 filtered_df 同时驱动预览表格、直方图与散点图
 # =====================================================================
 def page_preview():
     render_page_header()
-    # multiselect 留空时显示全部列（默认即为全部列，方便直接查看）
-    selected_preview_cols = st.multiselect(
-        label=t["preview_cols"],
-        options=all_columns,
-        default=all_columns,
-        key="preview_cols",
-    )
-    # 滑块控制 head 的行数，范围 5~100，默认 20
-    n_rows = st.slider(t["preview_rows"], min_value=5, max_value=100, value=20, step=5)
-    use_style = st.checkbox(t["preview_style"], value=True)
-
-    preview_df = df[selected_preview_cols].head(n_rows)
-    st.caption(f"{t['preview_dim']} {preview_df.shape[0]} × {preview_df.shape[1]}")
-
-    if use_style:
-        # pandas Styler：数值列蓝白色阶 + 浮点两位小数，表格本身也是一种可视化
-        float_cols = [
-            c for c in preview_df.columns
-            if pd.api.types.is_float_dtype(preview_df[c])
-        ]
-        if float_cols:
-            styler = (
-                preview_df.style
-                .background_gradient(cmap="Blues", subset=float_cols)
-                .format({c: "{:,.2f}" for c in float_cols})
-            )
-            st.dataframe(styler, width="stretch", hide_index=True)
-        else:
-            st.dataframe(preview_df, width="stretch", hide_index=True)
-    else:
-        st.dataframe(preview_df, width="stretch", hide_index=True)
-
-    # 把当前视图导出为 CSV
-    st.download_button(
-        label=t["download_preview"],
-        data=make_download_csv(preview_df),
-        file_name="preview.csv",
-        mime="text/csv",
-    )
 
     # =================================================================
-    # 同页第二板块：多列筛选（原独立页面合并进“数据预览与筛选”）
-    # 数值列 → 区间滑块；类别列 → 多选；多个条件用“逻辑与”叠加；
-    # 筛选结果实时驱动分布对比直方图与高亮散点图
+    # 板块一：数据筛选 —— 本页唯一的筛选入口
+    # 数值列 → 区间滑块；类别列 → 多选；多个条件“逻辑与”叠加
     # =================================================================
-    st.divider()
-    # 7.1 选择要展示的列
-    show_columns = st.multiselect(
-        label=t["filter_cols_show"],
-        options=all_columns,
-        default=all_columns,
-        key="filter_show_cols",
-    )
-
-    # 7.2 选择要参与筛选的列（可多选，实现“多列筛选”）
+    st.subheader(t["filter_section_title"])
     condition_columns = st.multiselect(
         label=t["filter_cols_cond"], options=all_columns, key="filter_cond_cols"
     )
 
-    # 从原始数据的副本开始，逐个条件收缩结果集
+    # 从原始数据副本开始逐个条件收缩；本页表格与图表都只使用这份结果
     filtered_df = df.copy()
 
     # 每个被选中的列生成一个对应类型的输入控件
     for col in condition_columns:
         st.markdown(f"**`{col}`**")
         if pd.api.types.is_numeric_dtype(df[col]):
-            # 数值型：用最小值/最大值滑块做闭区间筛选
-            # min()/max() 用 skipna=True（默认），缺失值不会干扰边界
+            # 数值型：最小值/最大值双端滑块做闭区间筛选（边界忽略缺失值）
             col_min = float(df[col].min())
             col_max = float(df[col].max())
             low, high = st.slider(
                 label=f"{col} — {t['filter_num_tip']}",
                 min_value=col_min,
                 max_value=col_max,
-                value=(col_min, col_max),  # 默认选中完整区间
+                value=(col_min, col_max),  # 默认完整区间，等价于不过滤
                 key=f"num_filter_{col}",
             )
             # 布尔索引：只保留区间内的行
@@ -1726,23 +1693,99 @@ def page_preview():
             if picked:
                 filtered_df = filtered_df[filtered_df[col].isin(picked)]
 
-    st.divider()
-
-    # 7.3 筛选结果可视化：先给前后样本量对比，再给两张联动图
-    st.subheader(t["filter_viz_title"])
+    # 筛选前后样本量对比：每次调整条件，收缩效果立刻可见
     n_before, n_after = df.shape[0], filtered_df.shape[0]
     keep_ratio = n_after / n_before if n_before else 0.0
-
     fc1, fc2, fc3 = st.columns(3)
     fc1.metric(t["filter_before"], n_before)
     fc2.metric(t["filter_after"], n_after)
     fc3.metric(t["filter_keep_pct"], f"{keep_ratio * 100:.1f}%")
     st.progress(keep_ratio)
-
     if not condition_columns:
-        st.caption(t["filter_no_cond_hint"])
+        st.caption(t["filter_no_cond_hint"].format(n=n_before))
 
-    if numeric_columns:
+    st.divider()
+
+    # =================================================================
+    # 板块二：筛选结果预览（只展示 filtered_df，不再有脱离筛选的表格）
+    # =================================================================
+    st.subheader(t["preview_section_title"])
+    if filtered_df.empty:
+        # 条件过严时给出友好提示，下载按钮一并禁用
+        st.warning(t["filter_empty"])
+        result_all = filtered_df
+    else:
+        # 展示列 / 行数 / 色阶三个控件收成一行，排版更紧凑
+        pc_col, pr_col, ps_col = st.columns([2, 1.2, 1.3])
+        with pc_col:
+            # multiselect 留空时显示全部列
+            selected_preview_cols = st.multiselect(
+                label=t["preview_cols"],
+                options=all_columns,
+                default=all_columns,
+                key="preview_cols",
+            )
+        with pr_col:
+            # 行数上限随筛选结果动态收缩；结果不足 5 行时直接全部展示
+            n_avail = filtered_df.shape[0]
+            max_rows = min(100, n_avail)
+            if n_avail > 5:
+                n_rows = st.slider(
+                    t["preview_rows"], min_value=5, max_value=max_rows,
+                    value=min(20, max_rows), step=5,
+                )
+            else:
+                n_rows = n_avail
+        with ps_col:
+            use_style = st.checkbox(t["preview_style"], value=True)
+
+        view_cols = selected_preview_cols  # 留空时显示全部列
+        result_all = filtered_df[view_cols] if view_cols else filtered_df
+        preview_df = result_all.head(n_rows)
+        st.caption(
+            f"{t['preview_dim']} {preview_df.shape[0]} × {preview_df.shape[1]}"
+            f"（{t['filter_after']} {n_after}）"
+        )
+
+        if use_style:
+            # pandas Styler：数值列蓝白色阶 + 浮点两位小数，表格本身也是一种可视化
+            float_cols = [
+                c for c in preview_df.columns
+                if pd.api.types.is_float_dtype(preview_df[c])
+            ]
+            if float_cols:
+                styler = (
+                    preview_df.style
+                    .background_gradient(cmap="Blues", subset=float_cols)
+                    .format({c: "{:,.2f}" for c in float_cols})
+                )
+                st.dataframe(styler, width="stretch", hide_index=True)
+            else:
+                st.dataframe(preview_df, width="stretch", hide_index=True)
+        else:
+            st.dataframe(preview_df, width="stretch", hide_index=True)
+
+    # 导出当前筛选命中的全部记录（按所选列）
+    st.download_button(
+        label=t["download_filter"],
+        data=make_download_csv(result_all),
+        file_name="filtered.csv",
+        mime="text/csv",
+        disabled=filtered_df.empty,
+    )
+
+    st.divider()
+
+    # =================================================================
+    # 板块三：筛选结果图表 —— 直方图与散点图全部基于 filtered_df
+    # 复用统一绘图函数：直方图自带均值/中位数参考线，散点自带 OLS 趋势线
+    # =================================================================
+    st.subheader(t["chart_section_title"])
+    if not numeric_columns:
+        st.info(t["filter_no_num"])
+    elif filtered_df.empty:
+        st.info(t["filter_chart_empty"])
+    else:
         obs_col, sx_col, sy_col = st.columns(3)
         with obs_col:
             observe_col = st.selectbox(
@@ -1760,75 +1803,31 @@ def page_preview():
                 key="filter_scatter_y_col",
             )
 
-        # 7.3.1 分布对比：全部样本灰色垫底，命中样本蓝色叠加，区间收缩一目了然
-        fig_filter_hist = go.Figure()
-        fig_filter_hist.add_trace(
-            go.Histogram(
-                x=df[observe_col], nbinsx=30, marker_color="#ced4da",
-                name=t["filter_before"], opacity=0.7,
+        # 单变量分布直方图（筛选后样本非空才绘制）
+        if filtered_df[observe_col].dropna().shape[0] > 0:
+            fig_filter_hist = build_figure(
+                "hist", filtered_df, observe_col, None, None, None, 30, lang
             )
-        )
-        fig_filter_hist.add_trace(
-            go.Histogram(
-                x=filtered_df[observe_col], nbinsx=30, marker_color="#1c7ed6",
-                name=t["filter_after"], opacity=0.85,
+            show_plotly(fig_filter_hist, width="stretch")
+            st.info(
+                f"**{t['auto_insight']}**\n\n"
+                + build_insight("hist", filtered_df, observe_col, None, lang)
             )
-        )
-        fig_filter_hist.update_layout(
-            template=PLOTLY_TEMPLATE, barmode="overlay", bargap=0.1,
-            height=340, title=t["filter_hist_title"],
-            xaxis_title=observe_col, yaxis_title=t["count_label"],
-            margin=dict(t=50),
-        )
-        show_plotly(fig_filter_hist, width="stretch")
 
-        # 7.3.2 联动散点：未命中灰、命中蓝
-        fig_filter_scatter = go.Figure()
-        fig_filter_scatter.add_trace(
-            go.Scatter(
-                x=df[scatter_x], y=df[scatter_y], mode="markers",
-                marker=dict(color="#ced4da", size=6, opacity=0.55),
-                name=t["filter_before"],
+        # 双变量散点图（至少 2 个有效点且 X 有变化才绘制）
+        scatter_sub = filtered_df[[scatter_x, scatter_y]].dropna()
+        if scatter_sub.shape[0] >= 2 and scatter_sub[scatter_x].nunique() >= 2:
+            fig_filter_scatter = build_figure(
+                "scatter", filtered_df, scatter_x, scatter_y,
+                None, None, None, lang
             )
-        )
-        fig_filter_scatter.add_trace(
-            go.Scatter(
-                x=filtered_df[scatter_x], y=filtered_df[scatter_y], mode="markers",
-                marker=dict(color="#1c7ed6", size=7, opacity=0.85),
-                name=t["filter_after"],
+            show_plotly(fig_filter_scatter, width="stretch")
+            st.info(
+                f"**{t['auto_insight']}**\n\n"
+                + build_insight(
+                    "scatter", filtered_df, scatter_x, scatter_y, lang
+                )
             )
-        )
-        fig_filter_scatter.update_layout(
-            template=PLOTLY_TEMPLATE, height=420,
-            title=t["filter_scatter_title"],
-            xaxis_title=scatter_x, yaxis_title=scatter_y,
-            margin=dict(t=50),
-        )
-        show_plotly(fig_filter_scatter, width="stretch")
-    else:
-        st.info(t["filter_no_num"])
-
-    st.divider()
-
-    # 7.4 结果展示（仅显示用户选择的列）
-    st.subheader(t["filter_result_title"])
-    result_df = filtered_df[show_columns] if show_columns else filtered_df
-    st.caption(f"{t['filter_result_dim']} **{result_df.shape[0]}**")
-
-    if result_df.empty:
-        # 条件过严时给出友好提示
-        st.warning(t["filter_empty"])
-    else:
-        st.dataframe(result_df, width="stretch", hide_index=True)
-
-    # 筛选结果同样支持下载
-    st.download_button(
-        label=t["download_filter"],
-        data=make_download_csv(result_df),
-        file_name="filtered.csv",
-        mime="text/csv",
-        disabled=result_df.empty,
-    )
 
 # =====================================================================
 # 8. 页面四：统计描述 df.describe()
@@ -2296,8 +2295,13 @@ def page_chart():
             if nav_l.button(t["story_prev"], key="story_prev_btn"):
                 st.session_state.story_step -= 1
                 st.rerun()
-        nav_m.caption(
-            t["story_progress"].format(cur=cur + 1, total=len(story_steps))
+        # 进度文字：水平居中 + 与两侧按钮垂直对齐（caption 默认左对齐且基线偏高）
+        nav_m.markdown(
+            "<div style='text-align:center;padding-top:11px;"
+            "font-size:15px;font-weight:600;color:#8a9bb4;'>"
+            + t["story_progress"].format(cur=cur + 1, total=len(story_steps))
+            + "</div>",
+            unsafe_allow_html=True,
         )
         if step_key == "summary":
             if nav_r.button(t["story_restart"], key="story_restart_btn"):
