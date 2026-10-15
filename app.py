@@ -1615,16 +1615,21 @@ def page_overview():
 
     with ov_right:
         # 各字段内存占用：df.memory_usage(deep=True)，横向条形从大到小
+        # 按字段类型分类着色（蓝=数值列，金=类别列），避免连续色阶低端发白
         mem = df.memory_usage(deep=True, index=False).sort_values()
+        mem_kinds = [dtype_kind_label(df[c].dtype, lang) for c in mem.index]
         fig_mem = px.bar(
             x=mem.values, y=mem.index, orientation="h",
-            labels={"x": t["mem_bytes"], "y": t["col_name"]},
+            labels={"x": t["mem_bytes"], "y": t["col_name"], "color": t["col_kind"]},
             title=t["ov_memory"],
-            color=mem.values,
-            color_continuous_scale="Blues",
+            color=mem_kinds,
+            color_discrete_map={
+                t["kind_num"]: "#1c7ed6",
+                t["kind_cat"]: "#f5b301",
+            },
         )
         fig_mem.update_layout(template=PLOTLY_TEMPLATE, height=360,
-                              margin=dict(t=50), coloraxis_showscale=False)
+                              margin=dict(t=50), legend_title_text=t["col_kind"])
         show_plotly(fig_mem, width="stretch")
 
     st.divider()
@@ -1941,16 +1946,20 @@ def page_describe():
     else:
         # 9.4 各列缺失数量柱状图（只画存在缺失的列）
         miss_plot_df = miss_df[miss_df[t["miss_count"]] > 0]
+        # 实心科技金柱体：缺失数较少时也清晰可见（连续色阶低端会发白）
         fig_miss = px.bar(
             miss_plot_df,
             x=t["miss_col"],
             y=t["miss_count"],
             title=t["miss_chart_title"],
-            color=t["miss_count"],
-            color_continuous_scale="Blues",
+            color_discrete_sequence=["#f5b301"],
         )
-        fig_miss.update_layout(template=PLOTLY_TEMPLATE, coloraxis_showscale=False,
-                               margin=dict(t=50))
+        fig_miss.update_traces(
+            marker=dict(line=dict(color="#c79100", width=1.2)),
+            text=miss_plot_df[t["miss_count"]],
+            textposition="outside",
+        )
+        fig_miss.update_layout(template=PLOTLY_TEMPLATE, margin=dict(t=50))
         show_plotly(fig_miss, width="stretch")
 
         # 9.5 缺失位置矩阵：missingno 风格，金色格子标出缺失发生的行列位置
@@ -1961,9 +1970,9 @@ def page_describe():
             st.caption(t["miss_matrix_sample"])
         fig_na = px.imshow(
             na_matrix,
-            color_continuous_scale=(["#14283f", "#f5b301"]
+            color_continuous_scale=(["#1d3a63", "#f5b301"]
                                     if st.session_state["app_theme_dark"]
-                                    else ["#eaf2ff", "#f5b301"]),
+                                    else ["#90c2ff", "#f5b301"]),
             zmin=0, zmax=1, aspect="auto",
         )
         fig_na.update_layout(
@@ -2085,7 +2094,9 @@ def page_group():
                 st.subheader(t["grp_heat_title"])
                 fig_pivot = px.imshow(
                     pivot_df, text_auto=".2f", aspect="auto",
-                    color_continuous_scale="Blues",
+                    # 自定义蓝色三段板：最低值即为可见淡蓝，不会像 Blues 低端近白
+                    color_continuous_scale=[
+                        (0.0, "#dbeafe"), (0.5, "#74c0fc"), (1.0, "#08306b")],
                     labels=dict(x=pivot_col, y=group_col, color=agg_label),
                 )
                 fig_pivot.update_layout(template=PLOTLY_TEMPLATE,
