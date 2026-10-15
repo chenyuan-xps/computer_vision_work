@@ -20,3 +20,6 @@ _verify*.py
 _debug.py
 vout.txt
 verify_out.txt
+
+# 作业上交用源码压缩包
+*.zip
