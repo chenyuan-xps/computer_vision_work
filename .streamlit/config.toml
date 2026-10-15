@@ -1,0 +1,15 @@
+# Streamlit 基础主题配置
+# 基础主题锁定为浅色（白天模式），保证打开网页时页面底色一定是白色；
+# 应用内的“夜间模式”开关通过注入深色 CSS（含 !important）在此基础上覆盖，
+# 切回白天时移除深色 CSS，即恢复本文件定义的浅色主题。
+[theme]
+base = "light"
+primaryColor = "#1c7ed6"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f1f3f5"
+textColor = "#1f2937"
+font = "sans serif"
+
+[server]
+# 允许上传任意大小的 CSV（课程演示用，避免大文件被默认限制拦截）
+maxUploadSize = 200
